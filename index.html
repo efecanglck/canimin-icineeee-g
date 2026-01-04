@@ -23,11 +23,9 @@
             justify-content: center; align-items: center;
             font-family: 'Poppins', sans-serif;
             perspective: 1000px;
-            
-            /* --- MOBİL KAYDIRMA ENGELLEME --- */
-            overflow: hidden; /* Sayfa taşmasını engelle */
-            position: fixed; /* iOS'te body'nin yaylanmasını engelle */
-            touch-action: none; /* Telefondaki varsayılan sürüklemeleri kapat */
+            overflow: hidden; 
+            position: fixed; 
+            touch-action: none; 
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -36,7 +34,7 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 200;
             display: flex; justify-content: center; align-items: center; flex-direction: column;
-            touch-action: auto; /* Butona basabilmek için */
+            touch-action: auto;
         }
         #start-btn {
             padding: 15px 40px; font-size: 1.2rem; background: #ff69b4; color: white;
@@ -54,7 +52,7 @@
             align-items: center;
             transform: scale(1.1);
             transition: opacity 1s;
-            z-index: 50; /* Pasta arkada kalacak (Balonlar 60 olacak) */
+            z-index: 50; 
         }
 
         .layer {
@@ -115,12 +113,11 @@
             100% { transform: translateX(-50%) skewX(-2deg) scaleY(1.1); }
         }
 
-        /* --- BALON KONTEYNERİ & PNG STİLLERİ --- */
+        /* --- BALONLAR --- */
         #balloon-container {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; 
-            /* ÖNEMLİ: Balonlar pastanın (z-index:50) önünde olmalı */
             z-index: 60; 
             overflow: hidden;
             transition: opacity 1s ease;
@@ -130,12 +127,10 @@
             position: absolute;
             bottom: -30vh; 
             height: auto;
-            
             user-select: none;
             -webkit-user-select: none;
             -webkit-user-drag: none;
             pointer-events: none;
-
             will-change: transform, opacity;
             animation: floatUp linear infinite, sway ease-in-out infinite alternate;
         }
@@ -150,32 +145,37 @@
             100% { transform: rotate(5deg) translateX(15px); } 
         }
 
-        /* Zarf */
+        /* --- ZARF WRAPPER (Aşağıdan gelme animasyonu için güncellendi) --- */
         .envelope-wrapper {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
-            z-index: 100; transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.27);
-            cursor: pointer;
-            /* Wrapper tıklandığında (arkaplan) olayı yakalayabilmemiz için */
+            position: fixed; 
+            /* Başlangıçta ekranın altında saklı */
+            top: 100%; 
+            left: 50%; 
+            transform: translate(-50%, 0); 
+            
             width: 100%; height: 100%; 
             display: flex; justify-content: center; align-items: center;
-            pointer-events: none; /* Görünmezken tıklamayı engelle */
+            z-index: 100; 
+            
+            /* Yukarı çıkış animasyonu */
+            transition: top 1.2s cubic-bezier(0.19, 1, 0.22, 1), transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+            
+            pointer-events: none;
         }
+        
+        /* Visible olduğunda yukarı kayıp ortaya yerleşsin */
         .envelope-wrapper.visible { 
-            transform: translate(-50%, -50%) scale(1); /* Eski transform yapısı bozulmasın diye JS ile düzelteceğiz ya da wrapper mantığını koruyacağız */
-            /* Düzeltme: Wrapper tam ekran kaplasın ama merkezde zarf olsun */
-            transform: translate(0, 0) scale(1);
-            top: 0; left: 0;
+            top: 0;
+            transform: translate(-50%, 0); /* Flex centerladığı için translate ile oynamaya gerek yok ama yapıyı koruyalım */
             pointer-events: auto;
         }
         
-        /* Zarfın Kendisi */
         .envelope {
             position: relative; width: 300px; height: 200px; background: #e8d7c3;
             border-radius: 3px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); border: 1px solid #d4c4b0;
             transition: transform 0.8s;
+            transform: scale(0.8); /* Başlangıçta biraz küçük dursun */
         }
-        /* Başlangıç animasyonu için wrapper scale kullanıyorduk, şimdi wrapper sabit, envelope scale alacak */
-        .envelope-wrapper:not(.visible) .envelope { transform: scale(0); }
         .envelope-wrapper.visible .envelope { transform: scale(1); }
 
         .envelope .flap {
@@ -205,26 +205,23 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.2); transform: rotate(-2deg);
         }
 
+        /* Zarf Açılınca */
         .envelope-wrapper.open .flap { transform: rotateX(180deg); z-index: 1; }
         .envelope-wrapper.open .letter { bottom: 60px; z-index: 6; height: 220px; box-shadow: 0 -5px 15px rgba(0,0,0,0.1); }
         
-        /* TAM EKRAN MEKTUP HALİ */
+        /* Full Read Modu */
         .envelope-wrapper.full-read .letter {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 85vw; /* Mobil uyumlu genişlik */
-            max-width: 400px;
-            height: 70vh; /* Mobil uyumlu yükseklik */
-            max-height: 600px;
+            width: 85vw; max-width: 400px;
+            height: 70vh; max-height: 600px;
             bottom: auto; 
             z-index: 200; 
             box-shadow: 0 10px 40px rgba(0,0,0,0.6); 
             border-radius: 5px;
-            
-            /* Sadece mektubun içi kaydırılabilir olsun */
             overflow-y: auto; 
-            -webkit-overflow-scrolling: touch; /* iOS için akıcı kaydırma */
-            touch-action: pan-y; /* Dikey kaydırmaya izin ver */
-            cursor: default; /* Mektup açıkken imleç değişmesin */
+            -webkit-overflow-scrolling: touch; 
+            touch-action: pan-y; 
+            cursor: default; 
         }
         
         .guide-text { margin-top: 20px; color: #888; font-size: 0.8rem; z-index: 60; }
@@ -245,8 +242,9 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             overflow: hidden; 
             touch-action: auto;
+            visibility: hidden; /* Varsayılan olarak gizli, sadece full-read'de açacağız */
         }
-        .close-btn.visible { opacity: 1; }
+        .close-btn.visible { opacity: 1; visibility: visible; }
         .close-btn:hover { background: rgba(255, 105, 180, 1); transform: scale(1.1); }
 
         .lottie-icon {
@@ -261,7 +259,7 @@
     <audio id="bg-music">
         <source src="music/gizemligizem.mp3" type="audio/mpeg">
     </audio>
-    <audio id="confetti-sound">
+    <audio id="confetti-sound" preload="auto">
         <source src="music/konfeti.mp3" type="audio/mpeg">
     </audio>
 
@@ -336,6 +334,9 @@
             container: iconRefreshContainer, renderer: 'svg', loop: false, autoplay: false, path: 'icon/refresh.json'
         });
 
+        // Konfeti sesi ayarı (Bozulmayı önlemek için %60 ses)
+        confettiSound.volume = 0.6;
+
         closeBtn.addEventListener('mouseenter', () => {
             if (!isRepeatMode) { animMultiply.goToAndPlay(0, true); } else { animRefresh.goToAndPlay(0, true); }
         });
@@ -384,15 +385,16 @@
             guide.innerText = "İyi ki doğdun! 🎉";
             guide.style.opacity = 1;
             
-            // SESLERİ OYNAT
             audio.play();
-            confettiSound.play(); // Konfeti sesi bir kere çalışır
+            
+            // Konfeti sesi: Başa sar ve çal (Temiz ses için)
+            confettiSound.currentTime = 0;
+            confettiSound.play(); 
             
             fadeInAudio();
             launchConfetti();
             createPngBalloons(); 
             setTimeout(() => {
-                // Opaklık ayarları
                 cakeContainer.style.opacity = "0.3";
                 balloonContainer.style.opacity = "0.3"; 
                 envelopeWrapper.classList.add('visible');
@@ -406,31 +408,39 @@
             }, 200);
         }
 
-        // --- CLICK EVENTS (TIKLAMA OLAYLARI) ---
+        // --- KADEMELİ KAPATMA MANTIĞI (Step-Back Logic) ---
 
         envelopeWrapper.addEventListener('click', (e) => {
-            // Eğer mektup tam açıksa (full-read) ve tıklanan yer 'letter' (kağıt) değilse, mektubu kapat
+            const isLetter = e.target.closest('.letter');
+
+            // DURUM 1: Mektup Tam Ekransa (Full Read)
             if (envelopeWrapper.classList.contains('full-read')) {
-                // closest('.letter') ile tıklanan elementin mektup içi olup olmadığını kontrol et
-                if (!e.target.closest('.letter')) {
-                     closeLetterAction(); // Kapatma fonksiyonunu çağır
+                // Eğer tıklanan yer "kağıt" değilse (boşluksa)
+                if (!isLetter) {
+                    envelopeWrapper.classList.remove('full-read');
+                    closeBtn.classList.remove('visible'); // X butonunu gizle
                 }
-                return;
+                return; // İşlemi burada kes
             }
 
-            // Eğer henüz açık değilse, zarfı aç
-            if (!envelopeWrapper.classList.contains('open')) {
-                envelopeWrapper.classList.add('open');
-                e.stopPropagation();
+            // DURUM 2: Zarf Açıksa (Open)
+            if (envelopeWrapper.classList.contains('open')) {
+                if (isLetter) {
+                    // Kağıda tıklanırsa büyüt
+                    envelopeWrapper.classList.add('full-read');
+                    closeBtn.classList.add('visible'); // X butonunu göster
+                    animMultiply.goToAndPlay(0, true);
+                } else {
+                    // Boşluğa tıklanırsa zarfı kapat
+                    envelopeWrapper.classList.remove('open');
+                }
+                return; // İşlemi burada kes
             }
-        });
 
-        // Kağıda tıklayınca full ekran yapma (Yalnızca kapanmamışsa)
-        letterContent.addEventListener('click', (e) => {
-            if (envelopeWrapper.classList.contains('open') && !envelopeWrapper.classList.contains('full-read')) {
-                envelopeWrapper.classList.add('full-read');
-                e.stopPropagation();
-            }
+            // DURUM 3: Zarf Kapalıysa
+            // Zarfı aç
+            envelopeWrapper.classList.add('open');
+            e.stopPropagation();
         });
 
         function launchConfetti() {
@@ -467,7 +477,6 @@
                 const floatDuration = Math.random() * 5 + 10 + 's'; 
                 const swayDuration = Math.random() * 2 + 3 + 's';
                 b.style.animationDuration = `${floatDuration}, ${swayDuration}`;
-                
                 b.style.animationDelay = Math.random() * 12 + 's';
                 
                 container.appendChild(b);
@@ -475,25 +484,23 @@
         }
 
         let isRepeatMode = false;
-        
-        // Kapatma Fonksiyonu (Hem X butonu hem de dışarı tıklama kullanır)
-        function closeLetterAction() {
+
+        // X Butonu artık "Tamamen Kapat ve Yenileme Moduna Geç" işlevi görüyor
+        closeBtn.addEventListener('click', () => {
             if (!isRepeatMode) {
+                // Her şeyi kapat
                 envelopeWrapper.classList.remove('full-read', 'open');
                 closeBtn.classList.remove('visible'); 
+                
                 iconMultiplyContainer.classList.add('hidden-icon');
                 iconRefreshContainer.classList.remove('hidden-icon');
                 isRepeatMode = true;
+                
+                // Tekrar butonu olarak geri getir
                 setTimeout(() => {
                     closeBtn.classList.add('visible');
                     animRefresh.goToAndPlay(0, true); 
-                }, 300);
-            }
-        }
-
-        closeBtn.addEventListener('click', () => {
-            if (!isRepeatMode) {
-                closeLetterAction(); // Kapat
+                }, 800); // Biraz daha geç gelsin ki zarf kapandığı görülsün
             } else {
                 // Refresh
                 animRefresh.goToAndPlay(0, true);
@@ -501,20 +508,23 @@
             }
         });
 
+        // Sadece ilk açılışta süreli butonu gösterme observer'ı
         let isFirstOpen = true;
         const fullReadObserver = new MutationObserver(() => {
             if (envelopeWrapper.classList.contains('full-read')) {
-                let delay = isFirstOpen ? 10000 : 2000;
-                isFirstOpen = false;
-                setTimeout(() => {
-                    if (envelopeWrapper.classList.contains('full-read')) {
-                        isRepeatMode = false;
-                        iconMultiplyContainer.classList.remove('hidden-icon');
-                        iconRefreshContainer.classList.add('hidden-icon');
-                        closeBtn.classList.add('visible');
-                        animMultiply.goToAndPlay(0, true);
-                    }
-                }, delay);
+                if (isFirstOpen) {
+                    isFirstOpen = false;
+                    setTimeout(() => {
+                        // Sadece eğer hala full-read ise butonu göster
+                        if (envelopeWrapper.classList.contains('full-read')) {
+                           closeBtn.classList.add('visible');
+                           animMultiply.goToAndPlay(0, true);
+                        }
+                    }, 5000); // İlk okumada 5 saniye sonra çıksın
+                } else {
+                    // İkinci açışlarda hemen çıksın
+                    closeBtn.classList.add('visible');
+                }
             }
         });
         fullReadObserver.observe(envelopeWrapper, { attributes: true, attributeFilter: ['class'] });
