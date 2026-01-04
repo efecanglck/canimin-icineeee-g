@@ -7,3 +7,4 @@ Sitenin adını "İyi ki Doğdun Bitanemmmm! 🐿️💨💨💨💨"
 bunuda "<button id="start-btn">Başlat 🌬️</button>" böyle değiştir.
 bunuda "<p class="guide-text" id="guide">Mikrofona doğru güçlü üfle bakalımsss!💨💨</p>" böyle değiştir.
 hala zarf kapanırken mektubun taşması (Clipping Sorunu) devam ediyor.
+Bir de mektubu açtıktan sonra aşağı inip geri gelince mektup aşağı kısmının yarısı gözüküyor. istediğim mektuba full-read mooda aşağı doğruyken yarım açık moda geçerken kendini sıfırlasın ve mektubun en üst kısmı gözükecek şekilde olsun. 
