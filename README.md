@@ -6,3 +6,4 @@ Meta verileri böyle güncelle:  title: 'İyi ki Doğdun Çingenemmm! 🐿️�
 Sitenin adını "İyi ki Doğdun Bitanemmmm! 🐿️💨💨💨💨"
 bunuda "<button id="start-btn">Başlat 🌬️</button>" böyle değiştir.
 bunuda "<p class="guide-text" id="guide">Mikrofona doğru güçlü üfle bakalımsss!💨💨</p>" böyle değiştir.
+hala zarf kapanırken mektubun taşması (Clipping Sorunu) devam ediyor.
