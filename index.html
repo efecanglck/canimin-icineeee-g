@@ -2,23 +2,32 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
     <title>İyi ki Doğdun Çingenemmm! 🐿️💨💨💨💨</title>
+    
+    <link rel="icon" type="image/x-icon" sizes="16x16" href="icon/logo16.ico">
+    <link rel="icon" type="image/x-icon" sizes="32x32" href="icon/logo32.ico">
+    <link rel="icon" type="image/x-icon" sizes="64x64" href="icon/logo64.ico">
+
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
 
     <style>
-        body {
+        html, body {
             margin: 0; padding: 0;
+            width: 100%; height: 100%;
             background-color: #1a1a1a;
             color: white;
             display: flex; flex-direction: column;
             justify-content: center; align-items: center;
-            height: 100vh; overflow: hidden;
             font-family: 'Poppins', sans-serif;
             perspective: 1000px;
-            /* Telefondaki seçimleri engelle */
+            
+            /* --- MOBİL KAYDIRMA ENGELLEME --- */
+            overflow: hidden; /* Sayfa taşmasını engelle */
+            position: fixed; /* iOS'te body'nin yaylanmasını engelle */
+            touch-action: none; /* Telefondaki varsayılan sürüklemeleri kapat */
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -27,6 +36,7 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 200;
             display: flex; justify-content: center; align-items: center; flex-direction: column;
+            touch-action: auto; /* Butona basabilmek için */
         }
         #start-btn {
             padding: 15px 40px; font-size: 1.2rem; background: #ff69b4; color: white;
@@ -44,7 +54,7 @@
             align-items: center;
             transform: scale(1.1);
             transition: opacity 1s;
-            z-index: 50; 
+            z-index: 50; /* Pasta arkada kalacak (Balonlar 60 olacak) */
         }
 
         .layer {
@@ -109,27 +119,24 @@
         #balloon-container {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; /* Mouse etkileşimini kapatır */
-            z-index: 20;
+            pointer-events: none; 
+            /* ÖNEMLİ: Balonlar pastanın (z-index:50) önünde olmalı */
+            z-index: 60; 
             overflow: hidden;
-            transition: opacity 1s ease; /* Zarf gelince yumuşakça sönmesi için */
+            transition: opacity 1s ease;
         }
 
         .balloon {
             position: absolute;
-            bottom: -30vh; /* Ekranın çok daha altından başlasın (görünmez alan) */
+            bottom: -30vh; 
             height: auto;
             
-            /* Tıklama ve Seçmeyi Engelleme */
             user-select: none;
             -webkit-user-select: none;
             -webkit-user-drag: none;
             pointer-events: none;
 
-            /* Performans */
             will-change: transform, opacity;
-            
-            /* Animasyonlar */
             animation: floatUp linear infinite, sway ease-in-out infinite alternate;
         }
 
@@ -148,12 +155,29 @@
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
             z-index: 100; transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.27);
             cursor: pointer;
+            /* Wrapper tıklandığında (arkaplan) olayı yakalayabilmemiz için */
+            width: 100%; height: 100%; 
+            display: flex; justify-content: center; align-items: center;
+            pointer-events: none; /* Görünmezken tıklamayı engelle */
         }
-        .envelope-wrapper.visible { transform: translate(-50%, -50%) scale(1); }
+        .envelope-wrapper.visible { 
+            transform: translate(-50%, -50%) scale(1); /* Eski transform yapısı bozulmasın diye JS ile düzelteceğiz ya da wrapper mantığını koruyacağız */
+            /* Düzeltme: Wrapper tam ekran kaplasın ama merkezde zarf olsun */
+            transform: translate(0, 0) scale(1);
+            top: 0; left: 0;
+            pointer-events: auto;
+        }
+        
+        /* Zarfın Kendisi */
         .envelope {
             position: relative; width: 300px; height: 200px; background: #e8d7c3;
             border-radius: 3px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); border: 1px solid #d4c4b0;
+            transition: transform 0.8s;
         }
+        /* Başlangıç animasyonu için wrapper scale kullanıyorduk, şimdi wrapper sabit, envelope scale alacak */
+        .envelope-wrapper:not(.visible) .envelope { transform: scale(0); }
+        .envelope-wrapper.visible .envelope { transform: scale(1); }
+
         .envelope .flap {
             position: absolute; top: 0; left: 0; width: 100%; height: 50%;
             background: #e8d7c3; border-bottom: 1px solid #d4c4b0;
@@ -184,16 +208,28 @@
         .envelope-wrapper.open .flap { transform: rotateX(180deg); z-index: 1; }
         .envelope-wrapper.open .letter { bottom: 60px; z-index: 6; height: 220px; box-shadow: 0 -5px 15px rgba(0,0,0,0.1); }
         
+        /* TAM EKRAN MEKTUP HALİ */
         .envelope-wrapper.full-read .letter {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 350px; height: 500px; bottom: auto; 
+            width: 85vw; /* Mobil uyumlu genişlik */
+            max-width: 400px;
+            height: 70vh; /* Mobil uyumlu yükseklik */
+            max-height: 600px;
+            bottom: auto; 
             z-index: 200; 
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6); overflow-y: auto; border-radius: 5px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6); 
+            border-radius: 5px;
+            
+            /* Sadece mektubun içi kaydırılabilir olsun */
+            overflow-y: auto; 
+            -webkit-overflow-scrolling: touch; /* iOS için akıcı kaydırma */
+            touch-action: pan-y; /* Dikey kaydırmaya izin ver */
+            cursor: default; /* Mektup açıkken imleç değişmesin */
         }
         
         .guide-text { margin-top: 20px; color: #888; font-size: 0.8rem; z-index: 60; }
         .click-hint {
-            position: absolute; bottom: -40px; width: 100%; text-align: center;
+            position: absolute; bottom: -60px; width: 100%; text-align: center;
             color: white; font-size: 0.9rem; opacity: 0; transition: opacity 0.5s;
         }
         .envelope-wrapper.visible .click-hint { opacity: 1; }
@@ -208,6 +244,7 @@
             display: flex; align-items: center; justify-content: center;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             overflow: hidden; 
+            touch-action: auto;
         }
         .close-btn.visible { opacity: 1; }
         .close-btn:hover { background: rgba(255, 105, 180, 1); transform: scale(1.1); }
@@ -223,6 +260,9 @@
 
     <audio id="bg-music">
         <source src="music/gizemligizem.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="confetti-sound">
+        <source src="music/konfeti.mp3" type="audio/mpeg">
     </audio>
 
     <div id="start-overlay">
@@ -266,8 +306,8 @@
                 </p>
                 <img src="photo/gvephoto.png" alt="Bizim Fotoğrafımız" class="letter-photo">
             </div>
+            <div class="click-hint">Zarfa Tıkla ✨</div>
         </div>
-        <div class="click-hint">Zarfa Tıkla ✨</div>
     </div>
 
     <button class="close-btn" id="closeBtn">
@@ -280,10 +320,11 @@
         const overlay = document.getElementById('start-overlay');
         const guide = document.getElementById('guide');
         const audio = document.getElementById('bg-music');
+        const confettiSound = document.getElementById('confetti-sound');
         const envelopeWrapper = document.getElementById('envelopeWrapper');
         const letterContent = document.getElementById('letterContent');
         const cakeContainer = document.getElementById('cakeContainer');
-        const balloonContainer = document.getElementById('balloon-container'); // Balon kutusu
+        const balloonContainer = document.getElementById('balloon-container'); 
         const closeBtn = document.getElementById('closeBtn');
         const iconMultiplyContainer = document.getElementById('icon-multiply');
         const iconRefreshContainer = document.getElementById('icon-refresh');
@@ -342,12 +383,16 @@
             guide.style.opacity = 0;
             guide.innerText = "İyi ki doğdun! 🎉";
             guide.style.opacity = 1;
+            
+            // SESLERİ OYNAT
             audio.play();
+            confettiSound.play(); // Konfeti sesi bir kere çalışır
+            
             fadeInAudio();
             launchConfetti();
-            createPngBalloons(); // Yeni balon sistemini başlat
+            createPngBalloons(); 
             setTimeout(() => {
-                // Zarf gelince hem pastayı hem balonları sönükleştir
+                // Opaklık ayarları
                 cakeContainer.style.opacity = "0.3";
                 balloonContainer.style.opacity = "0.3"; 
                 envelopeWrapper.classList.add('visible');
@@ -361,16 +406,28 @@
             }, 200);
         }
 
+        // --- CLICK EVENTS (TIKLAMA OLAYLARI) ---
+
         envelopeWrapper.addEventListener('click', (e) => {
-            if(envelopeWrapper.classList.contains('full-read')) return;
+            // Eğer mektup tam açıksa (full-read) ve tıklanan yer 'letter' (kağıt) değilse, mektubu kapat
+            if (envelopeWrapper.classList.contains('full-read')) {
+                // closest('.letter') ile tıklanan elementin mektup içi olup olmadığını kontrol et
+                if (!e.target.closest('.letter')) {
+                     closeLetterAction(); // Kapatma fonksiyonunu çağır
+                }
+                return;
+            }
+
+            // Eğer henüz açık değilse, zarfı aç
             if (!envelopeWrapper.classList.contains('open')) {
                 envelopeWrapper.classList.add('open');
                 e.stopPropagation();
             }
         });
 
+        // Kağıda tıklayınca full ekran yapma (Yalnızca kapanmamışsa)
         letterContent.addEventListener('click', (e) => {
-            if (envelopeWrapper.classList.contains('open')) {
+            if (envelopeWrapper.classList.contains('open') && !envelopeWrapper.classList.contains('full-read')) {
                 envelopeWrapper.classList.add('full-read');
                 e.stopPropagation();
             }
@@ -385,51 +442,32 @@
             }());
         }
 
-        // --- OPTİMİZE EDİLMİŞ VE YAYILMIŞ BALON SİSTEMİ ---
         function createPngBalloons() {
             const container = document.getElementById('balloon-container');
-            const isMobile = window.innerWidth < 768; // Mobil kontrolü
-            
-            // Mobilde daha az balon, PC'de normal sayı
+            const isMobile = window.innerWidth < 768; 
             const balloonCount = isMobile ? 15 : 25; 
-            
-            // Ekranı balon sayısı kadar "dilim"e (slot) bölüyoruz.
-            // Örneğin 100vw / 20 balon = her balonun 5vw'lik bir alanı olur.
             const slotWidth = 100 / balloonCount; 
-
-            // Dilim listesi oluştur ve karıştır (Örn: [0, 1, 2, ... 24] -> [5, 12, 0, ...])
-            // Bu sayede balonlar sırayla ip gibi dizilmez, rastgele görünür ama aslında ızgaradadır.
             let slots = Array.from({length: balloonCount}, (_, i) => i);
-            slots.sort(() => Math.random() - 0.5); // Karıştır
+            slots.sort(() => Math.random() - 0.5); 
 
             for (let i = 0; i < balloonCount; i++) {
                 const b = document.createElement('img');
                 b.className = 'balloon';
-                
-                // Görsel Seçimi
                 const randomNum = Math.floor(Math.random() * 7) + 1;
                 b.src = `balloon/balon${randomNum}.png`;
                 
-                // BOYUT AYARLAMASI (Responsive)
-                // Mobilde: 50-70px arası | PC'de: 90-120px arası
                 const minSize = isMobile ? 50 : 90;
                 const sizeVariance = isMobile ? 20 : 30;
                 b.style.width = (minSize + Math.random() * sizeVariance) + 'px';
 
-                // KONUM (SLOT SİSTEMİ)
-                // Karıştırılmış slot listesinden bir slot alıyoruz
                 const mySlotIndex = slots[i];
-                // O slotun başlangıç noktası + slot içinde rastgele ince ayar (overlap önlemek için)
                 const leftPos = (mySlotIndex * slotWidth) + (Math.random() * (slotWidth - 2)); 
                 b.style.left = leftPos + 'vw';
                 
-                // HIZLAR
-                const floatDuration = Math.random() * 5 + 10 + 's'; // 10-15sn
+                const floatDuration = Math.random() * 5 + 10 + 's'; 
                 const swayDuration = Math.random() * 2 + 3 + 's';
                 b.style.animationDuration = `${floatDuration}, ${swayDuration}`;
                 
-                // GECİKME (ZAMANLA YAYILMA)
-                // Balonlar bir anda değil, 0 ile 12 saniye arasına yayılarak gelecek.
                 b.style.animationDelay = Math.random() * 12 + 's';
                 
                 container.appendChild(b);
@@ -437,7 +475,9 @@
         }
 
         let isRepeatMode = false;
-        closeBtn.addEventListener('click', () => {
+        
+        // Kapatma Fonksiyonu (Hem X butonu hem de dışarı tıklama kullanır)
+        function closeLetterAction() {
             if (!isRepeatMode) {
                 envelopeWrapper.classList.remove('full-read', 'open');
                 closeBtn.classList.remove('visible'); 
@@ -448,7 +488,14 @@
                     closeBtn.classList.add('visible');
                     animRefresh.goToAndPlay(0, true); 
                 }, 300);
+            }
+        }
+
+        closeBtn.addEventListener('click', () => {
+            if (!isRepeatMode) {
+                closeLetterAction(); // Kapat
             } else {
+                // Refresh
                 animRefresh.goToAndPlay(0, true);
                 setTimeout(() => { window.location.reload(); }, 500);
             }
