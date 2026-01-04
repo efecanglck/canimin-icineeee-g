@@ -20,29 +20,20 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
 
     <style>
-        /* iOS Safari bounce ve siyah bar fix */
-        html {
-            background-color: #1a1a1a;
-            height: 100%;
-            overflow: hidden;
-        }
-        body {
+        /* --- CSS RESET & FIXED BACKGROUND --- */
+        /* Bu ayar iPhone'daki 'lastik gibi uzama' efektini ve alttaki siyahlığı engeller */
+        html, body {
             margin: 0; padding: 0;
-            width: 100%; 
-            /* Mobil tarayıcıların dinamik adres çubuklarını hesaba katan yükseklik */
-            height: 100dvh; 
-            min-height: -webkit-fill-available;
-            background-color: #1a1a1a;
-            color: white;
-            display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
+            width: 100%; height: 100%;
+            background-color: #1a1a1a; /* Kesin Arkaplan Rengi */
+            overflow: hidden; /* Sayfa kaydırmayı engelle */
+            position: fixed; /* Sayfayı ekrana çivile */
+            top: 0; left: 0;
             font-family: 'Poppins', sans-serif;
             perspective: 1000px;
-            overflow: hidden; 
-            position: fixed; 
             touch-action: none; 
             -webkit-tap-highlight-color: transparent;
-            overscroll-behavior: none; /* Sayfa yaylanmasını engelle */
+            -webkit-font-smoothing: antialiased;
         }
 
         /* --- Giriş Ekranı --- */
@@ -50,12 +41,12 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 200;
             display: flex; justify-content: center; align-items: center; flex-direction: column;
-            touch-action: auto;
+            color: white;
         }
         #start-btn {
             padding: 15px 40px; font-size: 1.2rem; background: #ff69b4; color: white;
             border: none; border-radius: 50px; cursor: pointer; font-weight: bold;
-            transition: transform 0.2s;
+            transition: transform 0.2s; margin-top: 20px;
         }
         #start-btn:hover { transform: scale(1.1); }
 
@@ -164,18 +155,18 @@
             left: 50%; transform: translateX(-50%);
             width: 270px; height: 150px; background: #fffdf0;
             padding: 20px; box-sizing: border-box; 
-            z-index: 3; /* Cep içinde (arkada) */
+            z-index: 3; 
             overflow: hidden;
             display: flex; flex-direction: column; align-items: center;
             font-family: 'Dancing Script', cursive; color: #333;
             border-radius: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); cursor: pointer;
             
-            /* CLIPPING FIXED: Transition ayarı */
+            /* CLIPPING FIXED: Kapanırken z-index anında düşer */
             transition: bottom 0.6s ease-in-out, 
                         width 0.6s ease-in-out, 
                         height 0.6s ease-in-out, 
                         transform 0.6s ease-in-out,
-                        z-index 0.1s linear; /* Z-index geçişi çok hızlı olsun */
+                        z-index 0.1s linear; 
         }
         
         .letter h2 { margin: 0; font-size: 1.5rem; color: #d63031; }
@@ -193,16 +184,11 @@
             bottom: 60px; 
             height: 220px; 
             box-shadow: 0 -5px 15px rgba(0,0,0,0.1); 
-            z-index: 6; /* Cepten çıkınca öne geç */
-            
-            /* AÇILIRKEN: Önce yukarı çık (bottom), sonra öne geç (z-index) */
-            transition-delay: 0s, 0s, 0s, 0s, 0.4s; /* Son parametre z-index beklemesi */
+            z-index: 6; 
+            /* Açılırken gecikmeli z-index */
+            transition-delay: 0s, 0s, 0s, 0s, 0.4s; 
         }
 
-        /* KAPATIRKEN (Open class'ı silinince): */
-        /* Varsayılan .letter stilindeki transition çalışır. Orada delay yok.
-           Böylece z-index anında 3 olur ve mektup aşağı inerken cebin arkasında kalır. */
-        
         /* --- FULL READ MODU --- */
         .envelope-wrapper.full-read .letter {
             position: fixed; 
@@ -218,7 +204,6 @@
             -webkit-overflow-scrolling: touch; 
             touch-action: pan-y; 
             cursor: default; 
-            /* Full moda geçerken yumuşak animasyon */
             transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
         }
         
@@ -230,6 +215,7 @@
         .envelope-wrapper.visible .click-hint { opacity: 1; }
         .envelope-wrapper.full-read .click-hint { display: none; }
         
+        /* BUTON (Close/Refresh) */
         .close-btn {
             position: fixed; top: 30px; right: 30px; 
             width: 50px; height: 50px;
@@ -252,7 +238,7 @@
     <audio id="bg-music">
         <source src="music/gizemligizem.mp3" type="audio/mpeg">
     </audio>
-    
+
     <div id="start-overlay">
         <h2>Hazır mısın Canımmm! 🐿️💨💨</h2>
         <button id="start-btn">Başlat 🌬️</button>
@@ -316,7 +302,6 @@
         const iconMultiplyContainer = document.getElementById('icon-multiply');
         const iconRefreshContainer = document.getElementById('icon-refresh');
         
-        // Lottie Animasyonları
         let animMultiply = lottie.loadAnimation({
             container: iconMultiplyContainer, renderer: 'svg', loop: false, autoplay: false, path: 'icon/multiply.json' 
         });
@@ -328,11 +313,10 @@
             if (!isRepeatMode) { animMultiply.goToAndPlay(0, true); } else { animRefresh.goToAndPlay(0, true); }
         });
 
-        // --- WEB AUDIO API İLE KONFETİ SESİ (MEDIA SESSION'A GİRMEZ) ---
+        // --- WEB AUDIO API (Konfeti Sesi) ---
         let audioCtx;
         let confettiBuffer = null;
 
-        // Sayfa yüklendiğinde ses dosyasını belleğe al (preload)
         async function loadConfettiSound() {
             try {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -340,39 +324,30 @@
                 const arrayBuffer = await response.arrayBuffer();
                 confettiBuffer = await audioCtx.decodeAudioData(arrayBuffer);
             } catch (e) {
-                console.log("Konfeti sesi yüklenemedi:", e);
+                console.log("Ses yükleme hatası:", e);
             }
         }
         loadConfettiSound();
 
         function playConfettiSound() {
             if (audioCtx && confettiBuffer) {
-                // BufferSourceNode oluştur - bu node Media Session API tarafından görünmez
                 const source = audioCtx.createBufferSource();
                 source.buffer = confettiBuffer;
-                
-                // Ses seviyesi kontrolü (GainNode)
                 const gainNode = audioCtx.createGain();
-                gainNode.gain.value = 0.6; // %60 Ses seviyesi
-                
+                gainNode.gain.value = 0.6; 
                 source.connect(gainNode);
                 gainNode.connect(audioCtx.destination);
                 source.start(0);
             }
         }
 
-        // --- MİKROFON VE ÜFLEME ALGILAMA ---
+        // --- MİKROFON ---
         let analyser, microphone, isBlowDetected = false;
 
         startBtn.addEventListener('click', async () => {
-            // AudioContext'i kullanıcı etkileşimiyle başlat (gerekirse)
-            if (audioCtx && audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-
+            if (audioCtx && audioCtx.state === 'suspended') { audioCtx.resume(); }
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                // Eğer audioCtx zaten yoksa (yukarıdaki load başarısızsa) oluştur
                 if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 
                 analyser = audioCtx.createAnalyser();
@@ -383,7 +358,7 @@
                 bgMusic.volume = 0;
                 detectBlow();
             } catch (err) {
-                alert("Mikrofon izni şart! Sayfayı yenile.");
+                alert("Mikrofon izni gerekli!");
             }
         });
 
@@ -400,7 +375,6 @@
 
         function stopMicrophone() {
             if (microphone) {
-                // MediaStreamSource bağlantısını kes, track'i durdur
                 microphone.disconnect(); 
                 microphone.mediaStream.getTracks().forEach(track => track.stop());
             }
@@ -414,11 +388,8 @@
             guide.innerText = "İyi ki doğdun! 🎉";
             guide.style.opacity = 1;
             
-            // 1. Arka plan müziğini çal (Bu Media Session'a girecek)
             bgMusic.play();
-            updateMediaSession(); // Meta verilerini hemen işle
-
-            // 2. Konfeti sesini Web Audio API ile çal (Media Session'a girmez)
+            updateMediaSession(); 
             playConfettiSound();
             
             fadeInAudio();
@@ -437,20 +408,12 @@
                     title: 'İyi ki Doğdun Çingenemmm! 🐿️💨💨💨💨',
                     artist: 'Gizem💞Efe Can',
                     album: 'SENİ SEVİYORUMMMM🤍🤍',
-                    artwork: [
-                        { src: 'icon/logo320.ico', sizes: '320x320', type: 'image/x-icon' }
-                    ]
+                    artwork: [ { src: 'icon/logo320.ico', sizes: '320x320', type: 'image/x-icon' } ]
                 });
-                
-                // Kilit ekranı aksiyonları (Play/Pause/Seek)
                 navigator.mediaSession.setActionHandler('play', () => bgMusic.play());
                 navigator.mediaSession.setActionHandler('pause', () => bgMusic.pause());
-                navigator.mediaSession.setActionHandler('seekbackward', (details) => {
-                    bgMusic.currentTime = Math.max(bgMusic.currentTime - (details.seekOffset || 10), 0);
-                });
-                navigator.mediaSession.setActionHandler('seekforward', (details) => {
-                    bgMusic.currentTime = Math.min(bgMusic.currentTime + (details.seekOffset || 10), bgMusic.duration);
-                });
+                navigator.mediaSession.setActionHandler('seekbackward', (d) => { bgMusic.currentTime = Math.max(bgMusic.currentTime - (d.seekOffset || 10), 0); });
+                navigator.mediaSession.setActionHandler('seekforward', (d) => { bgMusic.currentTime = Math.min(bgMusic.currentTime + (d.seekOffset || 10), bgMusic.duration); });
             }
         }
 
@@ -461,45 +424,98 @@
             }, 200);
         }
 
-        // --- ZARF ETKİLEŞİMLERİ ---
+        // --- ZARF ETKİLEŞİMİ & MANUEL KAPATMA (Refresh Tuşu Çözümü) ---
+        let isRepeatMode = false;
+
+        // "Tekrar Moduna Geçiş Yap" Fonksiyonu
+        // Hem X tuşuna basıldığında hem de elle kapatıldığında çağrılacak.
+        function triggerRefreshMode() {
+            if (isRepeatMode) return; // Zaten refresh modundaysa tekrar etme
+
+            closeBtn.classList.remove('visible'); // Önce butonu gizle
+            
+            isRepeatMode = true;
+
+            // İkonları değiştir
+            iconMultiplyContainer.classList.add('hidden-icon');
+            iconRefreshContainer.classList.remove('hidden-icon');
+            
+            // Zarf kapandıktan hemen sonra butonu refresh olarak geri getir
+            setTimeout(() => {
+                closeBtn.classList.add('visible');
+                animRefresh.goToAndPlay(0, true); 
+            }, 800); 
+        }
 
         envelopeWrapper.addEventListener('click', (e) => {
             const isLetter = e.target.closest('.letter');
 
-            // DURUM 1: Tam Ekran (Full Read) -> Yarım Ekran veya Kapatma
+            // 1. Durum: Tam Ekran -> Yarım Ekran
             if (envelopeWrapper.classList.contains('full-read')) {
                 if (!isLetter) {
-                    // Boşluğa tıklandı: Yarım moda dön
                     envelopeWrapper.classList.remove('full-read');
-                    closeBtn.classList.remove('visible'); 
-                    
-                    // ÖNEMLİ: Mektup küçülürken scroll'u en yukarı al
-                    // Biraz gecikmeli yapıyoruz ki animasyon bozulmasın, ama kullanıcı görmeden sıfırlansın
-                    setTimeout(() => {
-                        letterContent.scrollTop = 0;
-                    }, 100);
+                    closeBtn.classList.remove('visible'); // X'i gizle, yarım modda tuş yok
+                    setTimeout(() => { letterContent.scrollTop = 0; }, 100);
                 }
-                return; 
+                return;
             }
 
-            // DURUM 2: Yarım Açık -> Tam Ekran veya Kapatma
+            // 2. Durum: Yarım Açık -> Tam Ekran veya KAPATMA
             if (envelopeWrapper.classList.contains('open')) {
                 if (isLetter) {
-                    // Kağıda tıklandı: Tam ekran yap
+                    // Mektuba tıklayınca büyüt
                     envelopeWrapper.classList.add('full-read');
-                    closeBtn.classList.add('visible'); 
+                    closeBtn.classList.add('visible'); // X'i göster
                     animMultiply.goToAndPlay(0, true);
                 } else {
-                    // Boşluğa tıklandı: Zarfı kapat
+                    // BOŞLUĞA TIKLAYINCA ZARFI KAPAT
                     envelopeWrapper.classList.remove('open');
+                    // BURASI KRİTİK NOKTA: Elle kapattığında da Refresh modunu tetikle!
+                    triggerRefreshMode();
                 }
-                return; 
+                return;
             }
 
-            // DURUM 3: Kapalı -> Yarım Aç
+            // 3. Durum: Kapalı -> Yarım Aç
             envelopeWrapper.classList.add('open');
             e.stopPropagation();
         });
+
+        // X (veya Refresh) Butonu Tıklaması
+        closeBtn.addEventListener('click', () => {
+            if (!isRepeatMode) {
+                // X modundayız: Manuel kapatma
+                envelopeWrapper.classList.remove('full-read');
+                setTimeout(() => { envelopeWrapper.classList.remove('open'); }, 100);
+                setTimeout(() => { letterContent.scrollTop = 0; }, 300);
+                
+                triggerRefreshMode(); // Refresh moduna geç
+            } else {
+                // Refresh modundayız: Sayfayı yenile
+                animRefresh.goToAndPlay(0, true);
+                setTimeout(() => { window.location.reload(); }, 500);
+            }
+        });
+
+        // Tam ekrana geçildiğinde X tuşunu gösterme kontrolü
+        let isFirstOpen = true;
+        const fullReadObserver = new MutationObserver(() => {
+            if (envelopeWrapper.classList.contains('full-read')) {
+                if (isFirstOpen) {
+                    isFirstOpen = false;
+                    setTimeout(() => {
+                        if (envelopeWrapper.classList.contains('full-read')) {
+                           closeBtn.classList.add('visible');
+                           animMultiply.goToAndPlay(0, true);
+                        }
+                    }, 5000); 
+                } else {
+                    // İkinci açışlarda hemen göster
+                    closeBtn.classList.add('visible');
+                }
+            }
+        });
+        fullReadObserver.observe(envelopeWrapper, { attributes: true, attributeFilter: ['class'] });
 
         function launchConfetti() {
             const end = Date.now() + 3000;
@@ -523,72 +539,19 @@
                 b.className = 'balloon';
                 const randomNum = Math.floor(Math.random() * 7) + 1;
                 b.src = `balloon/balon${randomNum}.png`;
-                
                 const minSize = isMobile ? 50 : 90;
                 const sizeVariance = isMobile ? 20 : 30;
                 b.style.width = (minSize + Math.random() * sizeVariance) + 'px';
-
                 const mySlotIndex = slots[i];
                 const leftPos = (mySlotIndex * slotWidth) + (Math.random() * (slotWidth - 2)); 
                 b.style.left = leftPos + 'vw';
-                
                 const floatDuration = Math.random() * 5 + 10 + 's'; 
                 const swayDuration = Math.random() * 2 + 3 + 's';
                 b.style.animationDuration = `${floatDuration}, ${swayDuration}`;
                 b.style.animationDelay = Math.random() * 12 + 's';
-                
                 container.appendChild(b);
             }
         }
-
-        let isRepeatMode = false;
-
-        closeBtn.addEventListener('click', () => {
-            if (!isRepeatMode) {
-                // Full-read'den çık
-                envelopeWrapper.classList.remove('full-read');
-                
-                // Sonra open'dan çık (komple kapat)
-                setTimeout(() => {
-                   envelopeWrapper.classList.remove('open');
-                }, 100);
-
-                closeBtn.classList.remove('visible'); 
-                
-                // Mektup scrollunu sıfırla
-                setTimeout(() => { letterContent.scrollTop = 0; }, 300);
-
-                iconMultiplyContainer.classList.add('hidden-icon');
-                iconRefreshContainer.classList.remove('hidden-icon');
-                isRepeatMode = true;
-                
-                setTimeout(() => {
-                    closeBtn.classList.add('visible');
-                    animRefresh.goToAndPlay(0, true); 
-                }, 800); 
-            } else {
-                animRefresh.goToAndPlay(0, true);
-                setTimeout(() => { window.location.reload(); }, 500);
-            }
-        });
-
-        let isFirstOpen = true;
-        const fullReadObserver = new MutationObserver(() => {
-            if (envelopeWrapper.classList.contains('full-read')) {
-                if (isFirstOpen) {
-                    isFirstOpen = false;
-                    setTimeout(() => {
-                        if (envelopeWrapper.classList.contains('full-read')) {
-                           closeBtn.classList.add('visible');
-                           animMultiply.goToAndPlay(0, true);
-                        }
-                    }, 5000); 
-                } else {
-                    closeBtn.classList.add('visible');
-                }
-            }
-        });
-        fullReadObserver.observe(envelopeWrapper, { attributes: true, attributeFilter: ['class'] });
     </script>
 </body>
 </html>
