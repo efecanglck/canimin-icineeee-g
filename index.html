@@ -199,10 +199,6 @@
             transition-delay: 0s, 0s, 0s, 0s, 0.4s; /* Son parametre z-index beklemesi */
         }
 
-        /* KAPATIRKEN (Open class'ı silinince): */
-        /* Varsayılan .letter stilindeki transition çalışır. Orada delay yok.
-           Böylece z-index anında 3 olur ve mektup aşağı inerken cebin arkasında kalır. */
-        
         /* --- FULL READ MODU --- */
         .envelope-wrapper.full-read .letter {
             position: fixed; 
@@ -252,7 +248,7 @@
     <audio id="bg-music">
         <source src="music/gizemligizem.mp3" type="audio/mpeg">
     </audio>
-    
+
     <div id="start-overlay">
         <h2>Hazır mısın Canımmm! 🐿️💨💨</h2>
         <button id="start-btn">Başlat 🌬️</button>
@@ -328,11 +324,10 @@
             if (!isRepeatMode) { animMultiply.goToAndPlay(0, true); } else { animRefresh.goToAndPlay(0, true); }
         });
 
-        // --- WEB AUDIO API İLE KONFETİ SESİ (MEDIA SESSION'A GİRMEZ) ---
+        // --- WEB AUDIO API İLE KONFETİ SESİ ---
         let audioCtx;
         let confettiBuffer = null;
 
-        // Sayfa yüklendiğinde ses dosyasını belleğe al (preload)
         async function loadConfettiSound() {
             try {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -347,14 +342,10 @@
 
         function playConfettiSound() {
             if (audioCtx && confettiBuffer) {
-                // BufferSourceNode oluştur - bu node Media Session API tarafından görünmez
                 const source = audioCtx.createBufferSource();
                 source.buffer = confettiBuffer;
-                
-                // Ses seviyesi kontrolü (GainNode)
                 const gainNode = audioCtx.createGain();
-                gainNode.gain.value = 0.6; // %60 Ses seviyesi
-                
+                gainNode.gain.value = 0.6; 
                 source.connect(gainNode);
                 gainNode.connect(audioCtx.destination);
                 source.start(0);
@@ -365,14 +356,10 @@
         let analyser, microphone, isBlowDetected = false;
 
         startBtn.addEventListener('click', async () => {
-            // AudioContext'i kullanıcı etkileşimiyle başlat (gerekirse)
-            if (audioCtx && audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
+            if (audioCtx && audioCtx.state === 'suspended') { audioCtx.resume(); }
 
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                // Eğer audioCtx zaten yoksa (yukarıdaki load başarısızsa) oluştur
                 if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 
                 analyser = audioCtx.createAnalyser();
@@ -400,7 +387,6 @@
 
         function stopMicrophone() {
             if (microphone) {
-                // MediaStreamSource bağlantısını kes, track'i durdur
                 microphone.disconnect(); 
                 microphone.mediaStream.getTracks().forEach(track => track.stop());
             }
@@ -414,11 +400,9 @@
             guide.innerText = "İyi ki doğdun! 🎉";
             guide.style.opacity = 1;
             
-            // 1. Arka plan müziğini çal (Bu Media Session'a girecek)
             bgMusic.play();
-            updateMediaSession(); // Meta verilerini hemen işle
+            updateMediaSession(); 
 
-            // 2. Konfeti sesini Web Audio API ile çal (Media Session'a girmez)
             playConfettiSound();
             
             fadeInAudio();
@@ -442,7 +426,6 @@
                     ]
                 });
                 
-                // Kilit ekranı aksiyonları (Play/Pause/Seek)
                 navigator.mediaSession.setActionHandler('play', () => bgMusic.play());
                 navigator.mediaSession.setActionHandler('pause', () => bgMusic.pause());
                 navigator.mediaSession.setActionHandler('seekbackward', (details) => {
@@ -473,16 +456,13 @@
                     envelopeWrapper.classList.remove('full-read');
                     closeBtn.classList.remove('visible'); 
                     
-                    // ÖNEMLİ: Mektup küçülürken scroll'u en yukarı al
-                    // Biraz gecikmeli yapıyoruz ki animasyon bozulmasın, ama kullanıcı görmeden sıfırlansın
-                    setTimeout(() => {
-                        letterContent.scrollTop = 0;
-                    }, 100);
+                    // Scroll sıfırlama
+                    setTimeout(() => { letterContent.scrollTop = 0; }, 100);
                 }
                 return; 
             }
 
-            // DURUM 2: Yarım Açık -> Tam Ekran veya Kapatma
+            // DURUM 2: Yarım Açık -> Tam Ekran veya Tamamen Kapatma
             if (envelopeWrapper.classList.contains('open')) {
                 if (isLetter) {
                     // Kağıda tıklandı: Tam ekran yap
@@ -490,8 +470,19 @@
                     closeBtn.classList.add('visible'); 
                     animMultiply.goToAndPlay(0, true);
                 } else {
-                    // Boşluğa tıklandı: Zarfı kapat
+                    // Boşluğa tıklandı: Zarfı tamamen kapat
                     envelopeWrapper.classList.remove('open');
+                    
+                    // --- DÜZELTME BURADA: Zarf kapandığında Refresh butonu gelsin ---
+                    iconMultiplyContainer.classList.add('hidden-icon');
+                    iconRefreshContainer.classList.remove('hidden-icon');
+                    isRepeatMode = true;
+
+                    // Biraz gecikmeli göster (zarf kapanma animasyonuyla uyumlu olsun)
+                    setTimeout(() => {
+                        closeBtn.classList.add('visible');
+                        animRefresh.goToAndPlay(0, true);
+                    }, 800);
                 }
                 return; 
             }
@@ -545,17 +536,11 @@
 
         closeBtn.addEventListener('click', () => {
             if (!isRepeatMode) {
-                // Full-read'den çık
+                // Manuel kapatma (X butonu ile)
                 envelopeWrapper.classList.remove('full-read');
-                
-                // Sonra open'dan çık (komple kapat)
-                setTimeout(() => {
-                   envelopeWrapper.classList.remove('open');
-                }, 100);
+                setTimeout(() => { envelopeWrapper.classList.remove('open'); }, 100);
 
                 closeBtn.classList.remove('visible'); 
-                
-                // Mektup scrollunu sıfırla
                 setTimeout(() => { letterContent.scrollTop = 0; }, 300);
 
                 iconMultiplyContainer.classList.add('hidden-icon');
@@ -567,6 +552,7 @@
                     animRefresh.goToAndPlay(0, true); 
                 }, 800); 
             } else {
+                // Refresh
                 animRefresh.goToAndPlay(0, true);
                 setTimeout(() => { window.location.reload(); }, 500);
             }
