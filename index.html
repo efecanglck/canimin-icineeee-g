@@ -20,18 +20,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
 
     <style>
-        /* iOS Safari bounce ve siyah bar fix */
-        html {
-            background-color: #1a1a1a;
-            height: 100%;
-            overflow: hidden;
-        }
+        html { background-color: #1a1a1a; height: 100%; }
         body {
             margin: 0; padding: 0;
-            width: 100%; 
-            /* Mobil tarayıcıların dinamik adres çubuklarını hesaba katan yükseklik */
-            height: 100dvh; 
-            min-height: -webkit-fill-available;
+            width: 100%; height: 100%;
             background-color: #1a1a1a;
             color: white;
             display: flex; flex-direction: column;
@@ -42,7 +34,6 @@
             position: fixed; 
             touch-action: none; 
             -webkit-tap-highlight-color: transparent;
-            overscroll-behavior: none; /* Sayfa yaylanmasını engelle */
         }
 
         /* --- Giriş Ekranı --- */
@@ -65,15 +56,16 @@
             display: flex; flex-direction: column; align-items: center;
             transform: scale(1.1); transition: opacity 1s; z-index: 50; 
         }
-
         .layer {
-            position: relative; background: #f8c291; border-radius: 10px 10px 0 0;
+            position: relative; background: #f8c291;
+            border-radius: 10px 10px 0 0;
             box-shadow: 0 4px 0 #e17055 inset, 2px 2px 5px rgba(0,0,0,0.3);
             display: flex; justify-content: center; 
         }
         .layer::before {
-            content: ''; position: absolute; top: 0; left: -5%; width: 110%; height: 20px;
-            background: #fdcb6e; border-radius: 20px; z-index: 5; box-shadow: 0 2px 0 #fab1a0;
+            content: ''; position: absolute; top: 0; left: -5%;
+            width: 110%; height: 20px; background: #fdcb6e;
+            border-radius: 20px; z-index: 5; box-shadow: 0 2px 0 #fab1a0;
         }
         .layer-top { width: 140px; height: 50px; z-index: 10; background: #f8c291; }
         .layer-middle { width: 220px; height: 60px; z-index: 9; background: #fab1a0; }
@@ -82,11 +74,9 @@
             content: ''; position: absolute; bottom: -10px; left: -15px;
             width: 330px; height: 15px; background: #d63031; border-radius: 5px;
         }
-
         .candle-spot { position: absolute; bottom: 100%; margin-bottom: -8px; z-index: 4; }
         .pos-left { left: 15px; } .pos-right { right: 15px; }
         .pos-center { display: flex; gap: 10px; justify-content: center; width: 100%; }
-
         .candle {
             position: relative; width: 12px; height: 40px;
             background: repeating-linear-gradient(45deg, #fff, #fff 5px, #74b9ff 5px, #74b9ff 10px);
@@ -138,16 +128,16 @@
             pointer-events: none;
         }
         .envelope-wrapper.visible { 
-            top: 0; transform: translate(-50%, 0); pointer-events: auto;
+            top: 0; transform: translate(-50%, 0); 
+            pointer-events: auto;
         }
-        
         .envelope {
             position: relative; width: 300px; height: 200px; background: #e8d7c3;
             border-radius: 3px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); border: 1px solid #d4c4b0;
-            transition: transform 0.8s; transform: scale(0.8);
+            transition: transform 0.8s;
+            transform: scale(0.8);
         }
         .envelope-wrapper.visible .envelope { transform: scale(1); }
-
         .envelope .flap {
             position: absolute; top: 0; left: 0; width: 100%; height: 50%;
             background: #e8d7c3; border-bottom: 1px solid #d4c4b0;
@@ -159,25 +149,15 @@
         }
         
         .letter {
-            position: absolute; 
-            bottom: 0px; 
-            left: 50%; transform: translateX(-50%);
+            position: absolute; bottom: 0px; left: 50%; transform: translateX(-50%);
             width: 270px; height: 150px; background: #fffdf0;
             padding: 20px; box-sizing: border-box; 
-            z-index: 3; /* Cep içinde (arkada) */
-            overflow: hidden;
+            z-index: 3; overflow: hidden;
             display: flex; flex-direction: column; align-items: center;
             font-family: 'Dancing Script', cursive; color: #333;
             border-radius: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); cursor: pointer;
-            
-            /* CLIPPING FIXED: Transition ayarı */
-            transition: bottom 0.6s ease-in-out, 
-                        width 0.6s ease-in-out, 
-                        height 0.6s ease-in-out, 
-                        transform 0.6s ease-in-out,
-                        z-index 0.1s linear; /* Z-index geçişi çok hızlı olsun */
+            transition: bottom 0.6s ease-in-out, width 0.6s ease-in-out, height 0.6s ease-in-out, transform 0.6s ease-in-out, z-index 0s linear 0s; 
         }
-        
         .letter h2 { margin: 0; font-size: 1.5rem; color: #d63031; }
         .letter p { font-size: 1.2rem; line-height: 1.4; text-align: left; margin-top: 10px; width: 100%; }
         
@@ -187,34 +167,39 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.2); transform: rotate(-2deg);
         }
 
-        /* --- ZARF AÇILINCA (Yarım Mod) --- */
-        .envelope-wrapper.open .flap { transform: rotateX(180deg); z-index: 1; }
-        .envelope-wrapper.open .letter { 
-            bottom: 60px; 
-            height: 220px; 
-            box-shadow: 0 -5px 15px rgba(0,0,0,0.1); 
-            z-index: 6; /* Cepten çıkınca öne geç */
-            
-            /* AÇILIRKEN: Önce yukarı çık (bottom), sonra öne geç (z-index) */
-            transition-delay: 0s, 0s, 0s, 0s, 0.4s; /* Son parametre z-index beklemesi */
+        /* YANIP SÖNEN UYARI MESAJI STİLİ */
+        .lock-hint {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #d63031;
+            text-align: center;
+            width: 100%;
+            /* Yanıp sönme animasyonu */
+            animation: pulseText 2s infinite ease-in-out;
+        }
+        
+        @keyframes pulseText {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.95); }
         }
 
+        /* --- ZARF AÇILDI --- */
+        .envelope-wrapper.open .flap { transform: rotateX(180deg); z-index: 1; transition-delay: 0s; }
+        .envelope-wrapper.open .letter { 
+            bottom: 60px; height: 220px; box-shadow: 0 -5px 15px rgba(0,0,0,0.1); 
+            z-index: 6; transition-delay: 0s, 0s, 0s, 0s, 0.4s;
+        }
+        
         /* --- FULL READ MODU --- */
         .envelope-wrapper.full-read .letter {
-            position: fixed; 
-            top: 50%; left: 50%; 
-            transform: translate(-50%, -50%); 
-            bottom: auto;
-            width: 85vw; max-width: 400px;
-            height: 70vh; max-height: 600px;
-            z-index: 200; 
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6); 
-            border-radius: 5px;
-            overflow-y: auto; 
-            -webkit-overflow-scrolling: touch; 
-            touch-action: pan-y; 
-            cursor: default; 
-            /* Full moda geçerken yumuşak animasyon */
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); bottom: auto;
+            width: 85vw; max-width: 400px; height: 70vh; max-height: 600px;
+            z-index: 200; box-shadow: 0 10px 40px rgba(0,0,0,0.6); 
+            border-radius: 5px; overflow-y: auto; 
+            -webkit-overflow-scrolling: touch; touch-action: pan-y; cursor: default; 
             transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
         }
         
@@ -248,10 +233,13 @@
     <audio id="bg-music">
         <source src="music/gizemligizem.mp3" type="audio/mpeg">
     </audio>
+    <audio id="confetti-sound" preload="auto">
+        <source src="music/konfeti.mp3" type="audio/mpeg">
+    </audio>
 
     <div id="start-overlay">
         <h2>Hazır mısın Canımmm! 🐿️💨💨</h2>
-        <button id="start-btn">Başlat 🌬️</button>
+        <button id="start-btn">Başlat 😮‍💨</button>
     </div>
 
     <div id="balloon-container"></div>
@@ -273,7 +261,7 @@
         </div>
     </div>
 
-    <p class="guide-text" id="guide">Mikrofona doğru güçlü üfle bakalımsss!💨💨</p>
+    <p class="guide-text" id="guide">Mikrofona doğru güçlü üfle bakalımsss!💨</p>
 
     <div class="envelope-wrapper" id="envelopeWrapper">
         <div class="envelope">
@@ -289,6 +277,8 @@
                     Sonsuza kadar senin... ❤️
                 </p>
                 <img src="photo/gvephoto.png" alt="Bizim Fotoğrafımız" class="letter-photo">
+                
+                <p class="lock-hint">Ekranı kitle ve kilit ekranına bak bakalımsss👀</p>
             </div>
             <div class="click-hint">Zarfa Tıkla ✨</div>
         </div>
@@ -303,7 +293,8 @@
         const startBtn = document.getElementById('start-btn');
         const overlay = document.getElementById('start-overlay');
         const guide = document.getElementById('guide');
-        const bgMusic = document.getElementById('bg-music');
+        const audio = document.getElementById('bg-music');
+        const confettiSound = document.getElementById('confetti-sound');
         const envelopeWrapper = document.getElementById('envelopeWrapper');
         const letterContent = document.getElementById('letterContent');
         const cakeContainer = document.getElementById('cakeContainer');
@@ -312,7 +303,6 @@
         const iconMultiplyContainer = document.getElementById('icon-multiply');
         const iconRefreshContainer = document.getElementById('icon-refresh');
         
-        // Lottie Animasyonları
         let animMultiply = lottie.loadAnimation({
             container: iconMultiplyContainer, renderer: 'svg', loop: false, autoplay: false, path: 'icon/multiply.json' 
         });
@@ -320,54 +310,24 @@
             container: iconRefreshContainer, renderer: 'svg', loop: false, autoplay: false, path: 'icon/refresh.json'
         });
 
+        confettiSound.volume = 0.6;
+
         closeBtn.addEventListener('mouseenter', () => {
             if (!isRepeatMode) { animMultiply.goToAndPlay(0, true); } else { animRefresh.goToAndPlay(0, true); }
         });
 
-        // --- WEB AUDIO API İLE KONFETİ SESİ ---
-        let audioCtx;
-        let confettiBuffer = null;
-
-        async function loadConfettiSound() {
-            try {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const response = await fetch('music/konfeti.mp3');
-                const arrayBuffer = await response.arrayBuffer();
-                confettiBuffer = await audioCtx.decodeAudioData(arrayBuffer);
-            } catch (e) {
-                console.log("Konfeti sesi yüklenemedi:", e);
-            }
-        }
-        loadConfettiSound();
-
-        function playConfettiSound() {
-            if (audioCtx && confettiBuffer) {
-                const source = audioCtx.createBufferSource();
-                source.buffer = confettiBuffer;
-                const gainNode = audioCtx.createGain();
-                gainNode.gain.value = 0.6; 
-                source.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-                source.start(0);
-            }
-        }
-
-        // --- MİKROFON VE ÜFLEME ALGILAMA ---
-        let analyser, microphone, isBlowDetected = false;
+        let audioContext, analyser, microphone, isBlowDetected = false;
 
         startBtn.addEventListener('click', async () => {
-            if (audioCtx && audioCtx.state === 'suspended') { audioCtx.resume(); }
-
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                
-                analyser = audioCtx.createAnalyser();
-                microphone = audioCtx.createMediaStreamSource(stream);
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioContext.createAnalyser();
+                microphone = audioContext.createMediaStreamSource(stream);
                 microphone.connect(analyser);
                 analyser.fftSize = 256;
                 overlay.style.display = 'none';
-                bgMusic.volume = 0;
+                audio.volume = 0;
                 detectBlow();
             } catch (err) {
                 alert("Mikrofon izni şart! Sayfayı yenile.");
@@ -387,8 +347,8 @@
 
         function stopMicrophone() {
             if (microphone) {
-                microphone.disconnect(); 
-                microphone.mediaStream.getTracks().forEach(track => track.stop());
+                const stream = microphone.mediaStream;
+                stream.getTracks().forEach(track => track.stop());
             }
         }
 
@@ -400,10 +360,20 @@
             guide.innerText = "İyi ki doğdun! 🎉";
             guide.style.opacity = 1;
             
-            bgMusic.play();
-            updateMediaSession(); 
+            audio.play();
+            // KİLİT EKRANI AYARI
+            if ('mediaSession' in navigator) {
+                    title: 'İyi ki Doğdun Çingenemmm! ???????????',
+                    artist: 'Gizem??Efe Can',
+                    album: 'SENİ SEVİYORUMMMM!!!!',
+                    artwork: [
+                        { src: 'icon/logo320.ico', sizes: '320x320', type: 'image/x-icon' }
+                    ]
+                });
+            }
 
-            playConfettiSound();
+            confettiSound.currentTime = 0;
+            confettiSound.play(); 
             
             fadeInAudio();
             launchConfetti();
@@ -415,79 +385,33 @@
             }, 5000);
         }
 
-        function updateMediaSession() {
-            if ('mediaSession' in navigator) {
-                navigator.mediaSession.metadata = new MediaMetadata({
-                    title: 'İyi ki Doğdun Çingenemmm! 🐿️💨💨💨💨',
-                    artist: 'Gizem💞Efe Can',
-                    album: 'SENİ SEVİYORUMMMM🤍🤍',
-                    artwork: [
-                        { src: 'icon/logo320.ico', sizes: '320x320', type: 'image/x-icon' }
-                    ]
-                });
-                
-                navigator.mediaSession.setActionHandler('play', () => bgMusic.play());
-                navigator.mediaSession.setActionHandler('pause', () => bgMusic.pause());
-                navigator.mediaSession.setActionHandler('seekbackward', (details) => {
-                    bgMusic.currentTime = Math.max(bgMusic.currentTime - (details.seekOffset || 10), 0);
-                });
-                navigator.mediaSession.setActionHandler('seekforward', (details) => {
-                    bgMusic.currentTime = Math.min(bgMusic.currentTime + (details.seekOffset || 10), bgMusic.duration);
-                });
-            }
-        }
-
         function fadeInAudio() {
             let vol = 0;
             const interval = setInterval(() => {
-                if (vol < 1.0) { vol += 0.05; bgMusic.volume = Math.min(vol, 1.0); } else { clearInterval(interval); }
+                if (vol < 1.0) { vol += 0.05; audio.volume = Math.min(vol, 1.0); } else { clearInterval(interval); }
             }, 200);
         }
 
-        // --- ZARF ETKİLEŞİMLERİ ---
-
+        // --- KADEMELİ KAPATMA MANTIĞI ---
         envelopeWrapper.addEventListener('click', (e) => {
             const isLetter = e.target.closest('.letter');
-
-            // DURUM 1: Tam Ekran (Full Read) -> Yarım Ekran veya Kapatma
             if (envelopeWrapper.classList.contains('full-read')) {
                 if (!isLetter) {
-                    // Boşluğa tıklandı: Yarım moda dön
                     envelopeWrapper.classList.remove('full-read');
                     closeBtn.classList.remove('visible'); 
-                    
-                    // Scroll sıfırlama
-                    setTimeout(() => { letterContent.scrollTop = 0; }, 100);
                 }
                 return; 
             }
-
-            // DURUM 2: Yarım Açık -> Tam Ekran veya Tamamen Kapatma
             if (envelopeWrapper.classList.contains('open')) {
                 if (isLetter) {
-                    // Kağıda tıklandı: Tam ekran yap
                     envelopeWrapper.classList.add('full-read');
                     closeBtn.classList.add('visible'); 
                     animMultiply.goToAndPlay(0, true);
                 } else {
-                    // Boşluğa tıklandı: Zarfı tamamen kapat
                     envelopeWrapper.classList.remove('open');
-                    
-                    // --- DÜZELTME BURADA: Zarf kapandığında Refresh butonu gelsin ---
-                    iconMultiplyContainer.classList.add('hidden-icon');
-                    iconRefreshContainer.classList.remove('hidden-icon');
-                    isRepeatMode = true;
-
-                    // Biraz gecikmeli göster (zarf kapanma animasyonuyla uyumlu olsun)
-                    setTimeout(() => {
-                        closeBtn.classList.add('visible');
-                        animRefresh.goToAndPlay(0, true);
-                    }, 800);
                 }
                 return; 
             }
-
-            // DURUM 3: Kapalı -> Yarım Aç
             envelopeWrapper.classList.add('open');
             e.stopPropagation();
         });
@@ -533,26 +457,18 @@
         }
 
         let isRepeatMode = false;
-
         closeBtn.addEventListener('click', () => {
             if (!isRepeatMode) {
-                // Manuel kapatma (X butonu ile)
-                envelopeWrapper.classList.remove('full-read');
-                setTimeout(() => { envelopeWrapper.classList.remove('open'); }, 100);
-
+                envelopeWrapper.classList.remove('full-read', 'open');
                 closeBtn.classList.remove('visible'); 
-                setTimeout(() => { letterContent.scrollTop = 0; }, 300);
-
                 iconMultiplyContainer.classList.add('hidden-icon');
                 iconRefreshContainer.classList.remove('hidden-icon');
                 isRepeatMode = true;
-                
                 setTimeout(() => {
                     closeBtn.classList.add('visible');
                     animRefresh.goToAndPlay(0, true); 
                 }, 800); 
             } else {
-                // Refresh
                 animRefresh.goToAndPlay(0, true);
                 setTimeout(() => { window.location.reload(); }, 500);
             }
