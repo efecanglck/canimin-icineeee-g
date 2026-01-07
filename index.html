@@ -20,21 +20,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
 
     <style>
-        /* --- ÖZEL FONT TANIMLAMASI --- */
-        @font-face {
-            font-family: 'OzelElYazisi';
-            src: url('font/AV.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-        }
-
-        /* --- EMOJİ KORUMA SINIFI --- */
-        /* Emojilerin özel fonttan etkilenip bozulmaması için standart font ailesi */
-        .emoji-fix {
-            font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
-            font-style: normal;
-        }
-
         /* iOS Safari bounce ve siyah bar fix */
         html {
             background-color: #1a1a1a;
@@ -181,9 +166,7 @@
             z-index: 3; 
             overflow: hidden;
             display: flex; flex-direction: column; align-items: center;
-            /* BURADA SENİN FONTUNU KULLANIYORUZ */
-            font-family: 'OzelElYazisi', 'Dancing Script', cursive; 
-            color: #333;
+            font-family: 'Dancing Script', cursive; color: #333;
             border-radius: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); cursor: pointer;
             
             transition: bottom 0.6s ease-in-out, 
@@ -210,8 +193,7 @@
         .lock-warning {
             margin-top: 30px;
             margin-bottom: 20px;
-            /* Burada Poppins fontu korunuyor */
-            font-family: 'Poppins', sans-serif !important; 
+            font-family: 'Poppins', sans-serif; /* Font Poppins yapıldı */
             font-size: 0.9rem !important;
             color: #000000; /* Renk siyah yapıldı */
             font-weight: 600;
@@ -280,8 +262,8 @@
     </audio>
 
     <div id="start-overlay">
-        <h2>Hazır mısın Canımmm! <span class="emoji-fix">🐿️💨💨</span></h2>
-        <button id="start-btn">Başlat <span class="emoji-fix">🌬️</span></button>
+        <h2>Hazır mısın Canımmm! 🐿️💨💨</h2>
+        <button id="start-btn">Başlat 🌬️</button>
     </div>
 
     <div id="balloon-container"></div>
@@ -303,7 +285,7 @@
         </div>
     </div>
 
-    <p class="guide-text" id="guide">Mikrofona doğru güçlü üfle bakalımsss!<span class="emoji-fix">💨💨</span></p>
+    <p class="guide-text" id="guide">Mikrofona doğru güçlü üfle bakalımsss!💨💨</p>
 
     <div class="envelope-wrapper" id="envelopeWrapper">
         <div class="envelope">
@@ -311,9 +293,9 @@
             <div class="pocket"></div>
             
             <div class="letter" id="letterContent">
-                <h2>İyi ki doğdun AŞKIMMM <span class="emoji-fix">🤍</span></h2>
+                <h2>İyi ki doğdun AŞKIMMM 🤍</h2>
                 <p>
-                    Bugün senin günün.<span class="emoji-fix">😘😘😘</span> <br>
+                    Bugün senin günün.😘😘😘 <br>
                     Ama benim için bundan çok daha fazlası. <br>
                     Bugün, bu dünyada kalbimi bu kadar etkileyen, gülüşüyle içimi ısıtan, beni ben yapan ve varlığıyla bana ‘iyi ki’leri dedirten insanın geldiği gün.
                     <br><br>
@@ -348,7 +330,7 @@
                     <br><br>
                     Ve dilerim hayat sana, bana verdiğin güzel anlar kadar güzellik versin.
                     <br><br>
-                    Benim için, en büyük dileğim sensin. Benden bağımsız senin mutlu olman, iyi olman, kendinle gurur duyman, benim için çok çok yeterli. Seni seviyorumssss<span class="emoji-fix">😉❣️</span>.
+                    Benim için, en büyük dileğim sensin. Benden bağımsız senin mutlu olman, iyi olman, kendinle gurur duyman, benim için çok çok yeterli. Seni seviyorumssss😉❣️.
                     <br><br>
                     İyi ki doğdun sevdiceğim. <br>
                     İyi ki varsın. <br>
@@ -356,14 +338,14 @@
                     <br><br>
                     Nice yaşlara, <br>
                     Nice günlere, <br>
-                    Nice anılara… <span class="emoji-fix">🤍🎂</span>
+                    Nice anılara… 🤍🎂
                 </p>
                 <img src="photo/gvephoto.png" alt="Bizim Fotoğrafımız" class="letter-photo">
                 
-                <p class="lock-warning">Ekranı kilitle ve kilit ekranına bak bakalımsss<span class="emoji-fix">👀</span></p>
+                <p class="lock-warning">Ekranı kilitle ve kilit ekranına bak bakalımsss👀</p>
                 
             </div>
-            <div class="click-hint">Zarfa Tıkla <span class="emoji-fix">✨</span></div>
+            <div class="click-hint">Zarfa Tıkla ✨</div>
         </div>
     </div>
 
