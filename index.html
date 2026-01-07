@@ -15,7 +15,10 @@
     <link rel="icon" type="image/x-icon" sizes="64x64" href="icon/logo64.ico">
     <link rel="apple-touch-icon" href="icon/logo320.ico">
 
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
 
@@ -157,6 +160,7 @@
             background: #f0e6d8; border-top: 1px solid #d4c4b0; z-index: 4; border-radius: 0 0 3px 3px;
         }
         
+        /* GÜNCELLEME: Letter Fontu Caveat Olarak Değiştirildi */
         .letter {
             position: absolute; 
             bottom: 0px; 
@@ -166,7 +170,11 @@
             z-index: 3; 
             overflow: hidden;
             display: flex; flex-direction: column; align-items: center;
-            font-family: 'Dancing Script', cursive; color: #333;
+            
+            /* Caveat Fontu Tanımlandı */
+            font-family: 'Caveat', cursive; 
+            font-weight: 400; /* Normal ağırlık */
+            color: #333;
             border-radius: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); cursor: pointer;
             
             transition: bottom 0.6s ease-in-out, 
@@ -176,8 +184,13 @@
                         z-index 0.1s linear; 
         }
         
-        .letter h2 { margin: 0; font-size: 1.5rem; color: #d63031; }
-        .letter p { font-size: 1.2rem; line-height: 1.4; text-align: left; margin-top: 10px; width: 100%; }
+        /* Font biraz daha ince olduğu için boyutları hafif artırdık */
+        .letter h2 { margin: 0; font-size: 1.8rem; color: #d63031; font-weight: 700; }
+        .letter p { font-size: 1.35rem; line-height: 1.3; text-align: left; margin-top: 10px; width: 100%; }
+        
+        /* Bold ve Italic Tagları için garanti stil */
+        .letter strong, .letter b { font-weight: 700; }
+        .letter em, .letter i { font-style: italic; }
         
         .letter-photo {
             width: 90%; max-width: 250px; height: auto; margin-top: 15px;
@@ -193,7 +206,7 @@
         .lock-warning {
             margin-top: 30px;
             margin-bottom: 20px;
-            font-family: 'Poppins', sans-serif; /* Font Poppins yapıldı */
+            font-family: 'Poppins', sans-serif !important; /* Bu kısım Poppins kalmalı, mektup içeriği değil */
             font-size: 0.9rem !important;
             color: #000000; /* Renk siyah yapıldı */
             font-weight: 600;
@@ -293,34 +306,34 @@
             <div class="pocket"></div>
             
             <div class="letter" id="letterContent">
-                <h2>İyi ki doğdun Aşkımmm</h2>
-                <h2>🤍</h2>
+                <h2>İyi ki doğdun AŞKIMMM</h2>
+		<h2>🤍</h2>
                 <p>
                     Bugün senin günün.😘😘😘 <br>
                     Ama benim için bundan çok daha fazlası. <br>
                     Bugün, bu dünyada kalbimi bu kadar etkileyen, gülüşüyle içimi ısıtan, beni ben yapan ve varlığıyla bana ‘iyi ki’leri dedirten insanın geldiği gün.
                     <br><br>
-                    18 yaş… <br>
-                    Belki bu hayatının en özel dönemlerinin başlangıcından biri. <br>
+                    <strong>18 yaş...</strong> <br>
+                    Belki hayatının en özel dönemlerinin başlangıcından biri. <br>
                     Belki de bu yaşında ne istediğini daha iyi bildiğin, hayallerinin daha net, kendi kararlarının daha cesur olduğu bir yaştır. <br>
                     Ve ben senin bu hikâyenin bi yerinde, bi parçasında yanında olabildiğim kadarıyla hikâyende olduğum için gerçekten çok şanslı hissediyorum.
                     <br><br>
-                    Bak. Eskiden belki klişe gelen şeyler büyüdükçe, bazı şeyleri yaşayıp gördükçe kendinden bir şeyler buluyorsun ve klişelikten çıkıyor anlam ve mana kazanıyor.
+                    Eskiden belki klişe gelen (bana klişe gelen) şeyler büyüdükçe, bazı şeyleri yaşayıp gördükçe kendinden bir şeyler buluyorsun ve klişelikten çıkıyor anlam ve mana kazanıyormuş. (ben de yavaş anlıyorum)
                     <br><br>
-                    Hani bazen anlatcaklarını anlatacak birini bulamazsın, ya kimsenin anlamayacağına ya da kâle bile alınmayacağını hissedersin ve anlatmakla bile uğraşmazsın. O aklındakilerinle kendi kendine çözmeye çalışırsın ve çoğu zaman (kendimden bahsediyorum) için debelenirsin. (Öyle işte devamını bende bilmiyorum)
+                    Hani bazen anlatcaklarını anlatacak birini bulamazsın, ya kimsenin anlamayacağına ya da kâle bile alınmayacağını hissedersin ve anlatmakla bile uğraşmazsın. O aklındakilerinle kendi kendine çözmeye çalışırsın ve çoğu zaman (kendimden bahsediyorum her zaman) için debelenirsin. (böyle işte devamını bende bilmiyom)
                     <br><br>
-                    Seninle ilgili en sevdiğim şey. Sadece bedenen güzel olman değil, kalbinin ve niyetinin de bir o kadar güzel olması. Bazen güçlü, bazen kırılgan ama her zaman gerçek olman. Kimseye benzemeden, bütününle kendin gibi olman.
+                    Seninle ilgili en sevdiğim şey. Sadece güzel olman değil, kalbinin ve niyetinin de bi' o kadar güzel olması. Bazen güçlü, bazen kırgın ama her zaman gerçek olman. Kimseye benzemeden, bütününle kendin gibi olman.
                     <br><br>
-                    Lütfen bunu unutma hayatında seni kusursuz yapanları değil, seni kusurlarınla kabul eden kişiyi tercih et. Klişe biliyorum fakat bizi güzel ve özel yapan şey kusurlarımızdır. Kusursuz olmaktansa, kusurlarımızla kendimiz olabilmek güzeldir.
+                    Lütfen bunu unutma hayatında seni kusursuz yapanları değil, seni kusurlarınla kabul eden kişiyi tercih et. Klişe biliyorum fakat bizi güzel ve özel yapan şey kusurlarımızdır. Kusursuz başkası olmaktansa, kusurlarımızla kendimiz olabilmek güzeldir.
                     <br><br>
-                    Hayat keşke her zaman kolay ve adil davransa ama yapmıyor işte enik hayat. <br>
-                    Bazen umutsuzluğa katılacaksın, bazen de “yetemiyorum, neden böyle oluyor” diye düşüneceksin. <br>
+                    Hayat keşke her zaman kolay ve adil davransa ama yapmıyor işte <em>enik hayat</em>. <br>
+                    Bazen umutsuzluğa katılacaksın, bazen de “yetemiyorum, neden böyle oluyor” diye düşünebilirsin. <br>
                     Ama ne olursa olsun şunu unutma, <br>
-                    Ne olursa olsun ben yanındayım. <br>
+                    Ne olursa olsun ben yanında olmaya hazırım. <br>
                     Güldüğün günlerde de, sustuğun anlarda da.
                     <br><br>
-                    Hayat hiçbirimize her zaman kolay davranmayacak, bunu ikimiz de biliyoruz. <br>
-                    Ama sen zor zamanlarda bile kendinden vazgeçmeyen (çabaladığınca), ama içindeki iyiliği kaybetmeyen birisin. Fakat kendini ispat etmediğin, susmadığın ve beklemediğin kişilerle ol. <br>
+                    Hayat hiçbirimize her zaman kolay olmayacak, bunu biliyoruz. <br>
+                    Ama sen zor zamanlarda bile kendinden vazgeçmeyen (çabaladığınca), ama içindeki iyiliği kaybetmeyen birisin. Fakat kendini ispat etmediğin, susmadığın ve beklemediğin kişi ol. <br>
                     Bazen yorulacaksın, bazen “neden böyle oluyor” diyeceksin ama sonra yine ayağa kalkıp devam edersin inanıyorum (Bak Kuran'dan bile ayet veriyorum bak bak. İnşirâh Suresi 5. Ayet). Her şeyi bi' düzene sokarsın çünkü sende o <strong>kadın ruhu</strong> var.
                     <br><br>
                     İnşallah bu yeni yaşında; <br>
@@ -331,15 +344,15 @@
                     <br><br>
                     Ve dilerim hayat sana, bana verdiğin güzel anlar kadar güzellik versin.
                     <br><br>
-                    Benim için, en büyük dileğim sensin. Benden bağımsız senin mutlu olman, iyi olman, kendinle gurur duyman, benim için çok çok yeterli. Seni seviyorumssss😉❣️.
+                    Benim en büyük dileğim, benden bağımsız senin mutlu olman, iyi olman, kendinle gurur duyman, benim için çok çok yeterli. Seni seviyorumssss.😉❣️
                     <br><br>
                     İyi ki doğdun sevdiceğim. <br>
                     İyi ki varsın. <br>
                     İyi ki kalbime dokundun.
                     <br><br>
                     Nice yaşlara, <br>
-                    Nice günlere, <br>
-                    Nice anılara…
+                    Nice sağlıklı günlere, <br>
+                    Nice anılara… 🤍🎂
                 </p>
                 <img src="photo/gvephoto.png" alt="Bizim Fotoğrafımız" class="letter-photo">
                 
