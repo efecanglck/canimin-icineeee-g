@@ -160,7 +160,6 @@
             background: #f0e6d8; border-top: 1px solid #d4c4b0; z-index: 4; border-radius: 0 0 3px 3px;
         }
         
-        /* GÜNCELLEME: Letter Fontu Caveat Olarak Değiştirildi */
         .letter {
             position: absolute; 
             bottom: 0px; 
@@ -171,7 +170,6 @@
             overflow: hidden;
             display: flex; flex-direction: column; align-items: center;
             
-            /* Caveat Fontu Tanımlandı */
             font-family: 'Caveat', cursive; 
             font-weight: 400; /* Normal ağırlık */
             color: #333;
@@ -184,11 +182,9 @@
                         z-index 0.1s linear; 
         }
         
-        /* Font biraz daha ince olduğu için boyutları hafif artırdık */
         .letter h2 { margin: 0; font-size: 1.8rem; color: #d63031; font-weight: 700; }
         .letter p { font-size: 1.35rem; line-height: 1.3; text-align: left; margin-top: 10px; width: 100%; }
         
-        /* Bold ve Italic Tagları için garanti stil */
         .letter strong, .letter b { font-weight: 700; }
         .letter em, .letter i { font-style: italic; }
         
@@ -270,7 +266,7 @@
 </head>
 <body>
 
-    <audio id="bg-music" loop>
+    <audio id="bg-music">
         <source src="music/gizemligizem.mp3" type="audio/mpeg">
     </audio>
 
@@ -306,14 +302,14 @@
             <div class="pocket"></div>
             
             <div class="letter" id="letterContent">
-                <h2>İyi ki doğdun Aşkımm</h2>
-				<h2>🤍</h2>
+                <h2>İyi ki Doğdun Aşkımmm </h2>
+                <h2>🤍 </h2>
                 <p>
-                    Bugün senin günün.😘😘😘 <br>
+                    Bugün senin günününün.😘 <br>
                     Ama benim için bundan çok daha fazlası. <br>
                     Bugün, bu dünyada kalbimi bu kadar etkileyen, gülüşüyle içimi ısıtan, beni ben yapan ve varlığıyla bana ‘iyi ki’leri dedirten insanın geldiği gün.
                     <br><br>
-                    <strong>18 yaş...</strong> <br>
+                    18 yaş...<br>
                     Belki hayatının en özel dönemlerinin başlangıcından biri. <br>
                     Belki de bu yaşında ne istediğini daha iyi bildiğin, hayallerinin daha net, kendi kararlarının daha cesur olduğu bir yaştır. <br>
                     Ve ben senin bu hikâyenin bi yerinde, bi parçasında yanında olabildiğim kadarıyla hikâyende olduğum için gerçekten çok şanslı hissediyorum.
@@ -352,14 +348,14 @@
                     <br><br>
                     Nice yaşlara, <br>
                     Nice sağlıklı günlere, <br>
-                    Nice anılara… 🤍🎂
+                    Nice anılara… 🤍
                 </p>
                 <img src="photo/gvephoto.png" alt="Bizim Fotoğrafımız" class="letter-photo">
                 
                 <p class="lock-warning">Ekranı kilitle ve kilit ekranına bak bakalımsss👀</p>
                 
             </div>
-            <div class="click-hint">Zarfa Tıkla ✨</div>
+            <div class="click-hint">Mektuba Tıkla ✨</div>
         </div>
     </div>
 
@@ -381,6 +377,17 @@
         const iconMultiplyContainer = document.getElementById('icon-multiply');
         const iconRefreshContainer = document.getElementById('icon-refresh');
         
+        // --- GÜNCELLEME: MÜZİK SAYACI ---
+        let musicPlayCount = 0;
+        bgMusic.addEventListener('ended', () => {
+            musicPlayCount++;
+            if (musicPlayCount < 3) {
+                bgMusic.currentTime = 0;
+                bgMusic.play();
+            }
+        });
+        // ---------------------------------
+
         let animMultiply = lottie.loadAnimation({
             container: iconMultiplyContainer, renderer: 'svg', loop: false, autoplay: false, path: 'icon/multiply.json' 
         });
@@ -436,7 +443,7 @@
                 bgMusic.volume = 0;
                 detectBlow();
             } catch (err) {
-                alert("Mikrofon izni şart! Sayfayı yenile.");
+                alert("Mikrofona izin vermezsen, pastayı üfleyemezsin maalesef.😔");
             }
         });
 
@@ -463,7 +470,7 @@
             stopMicrophone();
             document.querySelectorAll('.flame').forEach(f => f.classList.add('off')); 
             guide.style.opacity = 0;
-            guide.innerText = "İyi ki doğdun! 🎉";
+            guide.innerText = "İyiyii kiiii doğdunununuuunnn! 🎉";
             guide.style.opacity = 1;
             
             bgMusic.play();
@@ -564,8 +571,7 @@
             for (let i = 0; i < balloonCount; i++) {
                 const b = document.createElement('img');
                 b.className = 'balloon';
-                const randomNum = Math.floor(Math.random() * 7) + 1;
-                b.src = `balloon/balon${randomNum}.png`;
+                b.src = `balloon/balon${Math.floor(Math.random() * 7) + 1}.png`;
                 
                 const minSize = isMobile ? 50 : 90;
                 const sizeVariance = isMobile ? 20 : 30;
