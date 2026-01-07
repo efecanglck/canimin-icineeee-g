@@ -20,6 +20,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
 
     <style>
+        /* --- ÖZEL FONT TANIMLAMASI --- */
+        @font-face {
+            font-family: 'OzelElYazisi';
+            src: url('font/AV.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        /* --- EMOJİ KORUMA SINIFI --- */
+        /* Emojilerin özel fonttan etkilenip bozulmaması için standart font ailesi */
+        .emoji-fix {
+            font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+            font-style: normal;
+        }
+
         /* iOS Safari bounce ve siyah bar fix */
         html {
             background-color: #1a1a1a;
@@ -166,7 +181,9 @@
             z-index: 3; 
             overflow: hidden;
             display: flex; flex-direction: column; align-items: center;
-            font-family: 'Dancing Script', cursive; color: #333;
+            /* BURADA SENİN FONTUNU KULLANIYORUZ */
+            font-family: 'OzelElYazisi', 'Dancing Script', cursive; 
+            color: #333;
             border-radius: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); cursor: pointer;
             
             transition: bottom 0.6s ease-in-out, 
@@ -193,12 +210,13 @@
         .lock-warning {
             margin-top: 30px;
             margin-bottom: 20px;
-			font-family: 'Poppins', sans-serif; /* Font Poppins yapıldı */
-			font-size: 0.9rem !important;
-            color: #000000; /* Başlık rengiyle uyumlu kırmızı */
-            font-weight: 400;
+            /* Burada Poppins fontu korunuyor */
+            font-family: 'Poppins', sans-serif !important; 
+            font-size: 0.9rem !important;
+            color: #000000; /* Renk siyah yapıldı */
+            font-weight: 600;
             text-align: center !important;
-            animation: blink 1s infinite ease-in-out;
+            animation: blink 2s infinite ease-in-out;
             width: 100%;
         }
 
@@ -262,8 +280,8 @@
     </audio>
 
     <div id="start-overlay">
-        <h2>Hazır mısın Canımmm! 🐿️💨💨</h2>
-        <button id="start-btn">Başlat 🌬️</button>
+        <h2>Hazır mısın Canımmm! <span class="emoji-fix">🐿️💨💨</span></h2>
+        <button id="start-btn">Başlat <span class="emoji-fix">🌬️</span></button>
     </div>
 
     <div id="balloon-container"></div>
@@ -285,27 +303,67 @@
         </div>
     </div>
 
-    <p class="guide-text" id="guide">Mikrofona doğru güçlü üfle bakalımsss!💨💨</p>
+    <p class="guide-text" id="guide">Mikrofona doğru güçlü üfle bakalımsss!<span class="emoji-fix">💨💨</span></p>
 
     <div class="envelope-wrapper" id="envelopeWrapper">
         <div class="envelope">
             <div class="flap"></div>
             <div class="pocket"></div>
+            
             <div class="letter" id="letterContent">
-                <h2>Canım Sevgilim,</h2>
+                <h2>İyi ki doğdun AŞKIMMM <span class="emoji-fix">🤍</span></h2>
                 <p>
-                    İyi ki doğdun, iyi ki varsın. 18. yaşın sana mutluluk getirsin.
-                    Seni çok ama çok seviyorum. <br><br>
-                    Bu mektubu yukarı çekip okuduğun gibi, hayatındaki tüm güzellikleri de kendine çekmen dileğiyle...
+                    Bugün senin günün.<span class="emoji-fix">😘😘😘</span> <br>
+                    Ama benim için bundan çok daha fazlası. <br>
+                    Bugün, bu dünyada kalbimi bu kadar etkileyen, gülüşüyle içimi ısıtan, beni ben yapan ve varlığıyla bana ‘iyi ki’leri dedirten insanın geldiği gün.
                     <br><br>
-                    Sonsuza kadar senin... ❤️
+                    18 yaş… <br>
+                    Belki bu hayatının en özel dönemlerinin başlangıcından biri. <br>
+                    Belki de bu yaşında ne istediğini daha iyi bildiğin, hayallerinin daha net, kendi kararlarının daha cesur olduğu bir yaştır. <br>
+                    Ve ben senin bu hikâyenin bi yerinde, bi parçasında yanında olabildiğim kadarıyla hikâyende olduğum için gerçekten çok şanslı hissediyorum.
+                    <br><br>
+                    Bak. Eskiden belki klişe gelen şeyler büyüdükçe, bazı şeyleri yaşayıp gördükçe kendinden bir şeyler buluyorsun ve klişelikten çıkıyor anlam ve mana kazanıyor.
+                    <br><br>
+                    Hani bazen anlatcaklarını anlatacak birini bulamazsın, ya kimsenin anlamayacağına ya da kâle bile alınmayacağını hissedersin ve anlatmakla bile uğraşmazsın. O aklındakilerinle kendi kendine çözmeye çalışırsın ve çoğu zaman (kendimden bahsediyorum) için debelenirsin. (Öyle işte devamını bende bilmiyorum)
+                    <br><br>
+                    Seninle ilgili en sevdiğim şey. Sadece bedenen güzel olman değil, kalbinin ve niyetinin de bir o kadar güzel olması. Bazen güçlü, bazen kırılgan ama her zaman gerçek olman. Kimseye benzemeden, bütününle kendin gibi olman.
+                    <br><br>
+                    Lütfen bunu unutma hayatında seni kusursuz yapanları değil, seni kusurlarınla kabul eden kişiyi tercih et. Klişe biliyorum fakat bizi güzel ve özel yapan şey kusurlarımızdır. Kusursuz olmaktansa, kusurlarımızla kendimiz olabilmek güzeldir.
+                    <br><br>
+                    Hayat keşke her zaman kolay ve adil davransa ama yapmıyor işte enik hayat. <br>
+                    Bazen umutsuzluğa katılacaksın, bazen de “yetemiyorum, neden böyle oluyor” diye düşüneceksin. <br>
+                    Ama ne olursa olsun şunu unutma, <br>
+                    Ne olursa olsun ben yanındayım. <br>
+                    Güldüğün günlerde de, sustuğun anlarda da.
+                    <br><br>
+                    Hayat hiçbirimize her zaman kolay davranmayacak, bunu ikimiz de biliyoruz. <br>
+                    Ama sen zor zamanlarda bile kendinden vazgeçmeyen (çabaladığınca), ama içindeki iyiliği kaybetmeyen birisin. Fakat kendini ispat etmediğin, susmadığın ve beklemediğin kişilerle ol. <br>
+                    Bazen yorulacaksın, bazen “neden böyle oluyor” diyeceksin ama sonra yine ayağa kalkıp devam edersin inanıyorum (Bak Kuran'dan bile ayet veriyorum bak bak. İnşirâh Suresi 5. Ayet). Her şeyi bi' düzene sokarsın çünkü sende o <strong>kadın ruhu</strong> var.
+                    <br><br>
+                    İnşallah bu yeni yaşında; <br>
+                    – Kendini daha çok seversin <br>
+                    – Ümitlerinden korkmazsın <br>
+                    – Kimse için kendinden vazgeçmezsin <br>
+                    – Kalbinden hep istediğin şekilde olur
+                    <br><br>
+                    Ve dilerim hayat sana, bana verdiğin güzel anlar kadar güzellik versin.
+                    <br><br>
+                    Benim için, en büyük dileğim sensin. Benden bağımsız senin mutlu olman, iyi olman, kendinle gurur duyman, benim için çok çok yeterli. Seni seviyorumssss<span class="emoji-fix">😉❣️</span>.
+                    <br><br>
+                    İyi ki doğdun sevdiceğim. <br>
+                    İyi ki varsın. <br>
+                    İyi ki kalbime dokundun.
+                    <br><br>
+                    Nice yaşlara, <br>
+                    Nice günlere, <br>
+                    Nice anılara… <span class="emoji-fix">🤍🎂</span>
                 </p>
                 <img src="photo/gvephoto.png" alt="Bizim Fotoğrafımız" class="letter-photo">
                 
-                <p class="lock-warning">Ekranı kilitle ve kilit ekranına bak bakalımsss👀</p>
+                <p class="lock-warning">Ekranı kilitle ve kilit ekranına bak bakalımsss<span class="emoji-fix">👀</span></p>
                 
             </div>
-            <div class="click-hint">Zarfa Tıkla ✨</div>
+            <div class="click-hint">Zarfa Tıkla <span class="emoji-fix">✨</span></div>
         </div>
     </div>
 
